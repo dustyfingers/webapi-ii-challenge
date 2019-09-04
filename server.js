@@ -46,13 +46,17 @@ server.get("/api/posts/:id", async (req, res) => {
 });
 
 // edit single post route
-server.put("/api/posts/:id", (req, res) => {
-  res.status(200).json({ api: "PUT TO /api/posts/id" });
+server.put("/api/posts/:id", async (req, res) => {
+  let editedPost;
+  const isPostEdited = await db.update(req.params.id, req.body);
+  isPostEdited ? editedPost = await db.findById(req.params.id) : editedPost = null;
+  res.status(200).json({ api: editedPost });
 });
 
 // delete single post route
-server.delete("/api/posts/:id", (req, res) => {
-  res.status(200).json({ api: "DELETE TO /api/posts/id" });
+server.delete("/api/posts/:id", async (req, res) => {
+  const deleteSuccessful = await db.remove(req.params.id);
+  res.status(200).json({ api: deleteSuccessful });
 });
 
 
